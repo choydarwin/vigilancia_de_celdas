@@ -1,0 +1,93 @@
+WindowManager:
+    FirstWindow:
+    SecondWindow:
+    ThirdWindow:
+
+<FirstWindow>:
+    name:"first"
+
+
+    BoxLayout:
+        orientation:"vertical"
+        spacing: "50dp"
+        padding: "50dp"
+                 
+        clock:
+
+        Label:
+            size_hint:.5,.5
+            pos_hint: {"center_x": .5 }
+            text: "Vigilancia de celdas patron"
+            
+        Button:
+            
+            size_hint:.5,.5
+            pos_hint: {"center_x": .5 }
+            text:"Documentacion"
+            on_release: 
+                app.root.current = "second"
+                root.manager.transition.direction = "left"
+            
+        Button:
+            
+            size_hint:.7,.7
+            pos_hint: {"center_x": .5 }
+            text:"Croquis"
+            on_release: 
+                app.root.current = "third"
+                root.manager.transition.direction = "left"
+
+
+<SecondWindow>:
+    name:"second"
+
+    BoxLayout:
+        orientation:"vertical"
+        spacing: "50dp"
+        padding: "50dp"
+
+        Label:
+            size_hint:.2,.2
+            pos_hint: {"center_x": .5 }
+            text: "Documentacion"
+
+        Button:
+            size_hint:.2,.2
+            pos_hint: {"center_x": .5 }
+            text:"Regresar"
+            on_release: 
+                app.root.current = "first"    
+                root.manager.transition.direction = "right"
+
+<ThirdWindow>:
+    name:"third"
+
+    BoxLayout:
+        orientation:"vertical"
+        spacing: "40dp"
+        padding: "40dp"
+
+        GridLayout:
+            cols:2
+            rows:1
+            size_hint:0.2,0.2
+            pos_hint:{'center_x':.5}
+            
+
+            Label:
+                size_hint:.4,.4
+                text:"CROQUIS"
+            Label:
+                id: num_dispensadores
+                size_hint:.4,.4
+                text:""
+            
+
+        Button:
+            size_hint:.1,.1
+            pos_hint: {"center_x": .5 }
+            text:"Regresar"
+            on_release: 
+                app.root.current = "first"    
+                root.manager.transition.direction = "right"
+
