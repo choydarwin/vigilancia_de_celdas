@@ -1,41 +1,37 @@
-from cgitb import text
-from kivy.app import App 
-from kivy.uix.widget import Widget
-from kivy.lang import Builder
-from kivy.uix.screenmanager import CardTransition, ScreenManager, Screen
-from kivy.uix.button import Button
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.label import Label
+from kivy.app import App
+from kivy.config import Config
 from kivy.clock import Clock
-from kivy.properties import StringProperty
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.lang import Builder
+from kivy.core.window import Window
 import time
 
+Window.size = (400, 150)
+Builder.load_string("""
+<Layout>
+    ClockLabel:
+        id: clock_label
+        size_hint: 0.75,1
+        font_size: 80
+        color: 'gold'
+        markup: True
+""")
 
-class FirstWindow(Screen):
+class Layout(BoxLayout):
     pass
-    
-class ClockText(Label):
+
+class ClockLabel(Label):
+    def __init__(self, **kwargs):
+        super(ClockLabel, self).__init__(**kwargs)
+        Clock.schedule_interval(self.update, 1)
     def update(self, *args):
-        self.text = time.strftime('%I'+':'+'%M' + ':' + '%S' +  ' %p')
-        print(self.text)
-        return ClockText
-
-class SecondWindow(Screen):
-    pass
-
-class ThirdWindow(Screen):
-    pass
-                               
-class WindowManager(ScreenManager):
-    pass
-
-kv = Builder.load_file("my.kv")
-
-class FirstApp(App):
+        self.text = f"[u]{time.strftime('%I:%M:%S')}[/u]"
+ 
+class DigitalClockApp(App):
     def build(self):
-        clocktext = ClockText()
-        Clock.schedule_interval(clocktext.update, 1)
-        return kv
+        return Layout()
 
-if __name__ == '__main__':
-    FirstApp().run()
+clock = DigitalClockApp()
+
+clock.run()
