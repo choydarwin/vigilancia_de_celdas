@@ -7,15 +7,14 @@ from kivy.lang import Builder
 from kivy.core.window import Window
 import time
 
-Window.size = (400, 150)
+Window.size = (400, 400)
 Builder.load_string("""
 <Layout>
+    Label:
+        text:"Vigilancia de celdas patron"
     ClockLabel:
         id: clock_label
         size_hint: 0.75,1
-        font_size: 80
-        color: 'gold'
-        markup: True
 """)
 
 class Layout(BoxLayout):
@@ -26,7 +25,7 @@ class ClockLabel(Label):
         super(ClockLabel, self).__init__(**kwargs)
         Clock.schedule_interval(self.update, 1)
     def update(self, *args):
-        self.text = f"[u]{time.strftime('%I:%M:%S')}[/u]"
+        self.text = time.strftime('%I:%M:%S')
  
 class DigitalClockApp(App):
     def build(self):
