@@ -1,59 +1,12 @@
 from turtle import Screen
 from kivy.app import App
-from kivy.config import Config
 from kivy.clock import Clock
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen, ScreenManager, RiseInTransition
 from kivy.lang import Builder
-from kivy.core.window import Window
 import time
 
-
-Builder.load_string("""
-<Principal>
-    GridLayout:
-        cols:1
-        size: root.width, root.height
-
-        Label:
-            text:"Vigilancia de celdas patron"
-        ClockLabel:
-            id: clock_label
-            size_hint: 0.75,1
-        Button:
-            text: "Configuracion"
-            background_color : 0, 0, 1, 1
-            on_press:
-                # You can define the duration of the change
-                # and the direction of the slide
-                root.manager.transition.direction = 'left'
-                root.manager.transition.duration = 1
-                root.manager.current = 'otra'
-
-
-<Otra>
-    GridLayout:
-        cols:1
-        size: root.width, root.height
-        Label:
-            text:"Settings"
-        ClockLabel:
-            id: clock_label
-            size_hint: 0.75,1
-        Button:
-            text: "Regresar"
-            background_color : 0, 0, 1, 1
-            on_press:
-                # You can define the duration of the change
-                # and the direction of the slide
-                root.manager.transition.direction = 'left'
-                root.manager.transition.duration = 1
-                root.manager.current = 'principal'
-
-
-""")
-
+Builder.load_file('main.kv')
 
 class Principal(Screen):
     pass
@@ -76,6 +29,6 @@ class VigilanciaApp(App):
     def build(self):
         return screen_manager
 
-clock = VigilanciaApp()
-
-clock.run()
+if __name__ == '__main__':
+    clock = VigilanciaApp()
+    clock.run()

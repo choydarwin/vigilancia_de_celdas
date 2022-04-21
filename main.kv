@@ -1,0 +1,40 @@
+<Principal>
+    GridLayout:
+        cols:1
+        size: root.width, root.height
+
+        Label:
+            text:"Vigilancia de celdas patron"
+        ClockLabel:
+            id: clock_label
+            size_hint: 0.75,1
+        Button:
+            text: "Configuracion"
+            background_color : 0, 0, 1, 1
+            on_press:
+                # You can define the duration of the change
+                # and the direction of the slide
+                root.manager.transition.direction = 'left'
+                root.manager.transition.duration = 1
+                root.manager.current = 'otra'
+
+
+<Otra>
+    GridLayout:
+        cols:1
+        size: root.width, root.height
+        Label:
+            text:"Settings"
+        ClockLabel:
+            id: clock_label
+            size_hint: 0.75,1
+        Button:
+            text: "Regresar"
+            background_color : 0, 0, 1, 1
+            on_press:
+                # You can define the duration of the change
+                # and the direction of the slide
+                root.manager.transition.direction = 'left'
+                root.manager.transition.duration = 1
+                root.manager.current = 'principal'
+
