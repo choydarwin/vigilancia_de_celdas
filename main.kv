@@ -16,18 +16,36 @@
                 # and the direction of the slide
                 root.manager.transition.direction = 'left'
                 root.manager.transition.duration = 1
-                root.manager.current = 'otra'
+                root.manager.current = 'config'
 
 
-<Otra>
+<Configuracion>
     GridLayout:
         cols:1
         size: root.width, root.height
+
         Label:
             text:"Settings"
-        ClockLabel:
-            id: clock_label
-            size_hint: 0.75,1
+
+        Spinner: 
+            id: spinner_frecuencia
+            on_text: root.spinner_frecuencia_de_vigilancia(spinner_frecuencia.text)
+            text: "Seleccionar frecuencia de vigilancia"
+            values: ["Diaria", "Semanal", "Mensual"]
+
+        Spinner: 
+            id: spinner_dia
+            on_text: root.spinner_dia(spinner_dia.text)
+            text: "Seleccionar dia"
+            values: ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"]
+        
+        Spinner: 
+            id: spinner_hora
+            on_text: root.spinner_hora_de_inicio(spinner_hora.text)
+            text: "Seleccionar hora de inicio"
+            values: ["07:00", "08:00", "09:00","10:00", "11:00","12:00", "13:00","14:00", "15:00"]
+        
+
         Button:
             text: "Regresar"
             background_color : 0, 0, 1, 1
@@ -36,5 +54,5 @@
                 # and the direction of the slide
                 root.manager.transition.direction = 'left'
                 root.manager.transition.duration = 1
-                root.manager.current = 'principal'
+                root.manager.current = 'main'
 
