@@ -13,12 +13,7 @@
         BoxLayout:
             orientation: 'vertical'
             Label:
-                text:"Estado el proceso: " + "no iniciado"
-            ProgressBar:
-                id: proceso
-                min: 0
-                max: 100
-                value:0
+                text:"Configuracion seleccionada - " + root.print_estado
 
         Button:
             text: "Configuracion"
@@ -32,6 +27,7 @@
 
 
 <Configuracion>
+
     GridLayout:
         cols:1
         size: root.width, root.height
@@ -50,7 +46,7 @@
             id: spinner_dia
             on_text: root.spinner_dia(spinner_dia.text)
             text: "Seleccionar dia"
-            values: ["Monday", "Martes", "Miercoles", "Jueves", "Viernes"]
+            values: ["Monday", "Tuesday", "Miercoles", "Jueves", "Viernes"]
             
         
         BoxLayout:
@@ -77,3 +73,27 @@
                 root.manager.transition.duration = 1
                 root.manager.current = 'main'
 
+
+<Ventana_proceso>
+    GridLayout:
+        cols:1
+        size: root.width, root.height
+
+        Label:
+            text:"Vigilancia de celdas patron"
+
+        ProgressBar:
+            id: proceso
+            min: 0
+            max: 100
+            value:0
+
+        Button:
+            text: "Configuracion"
+            background_color : 0, 0, 1, 0
+            on_press:
+                # You can define the duration of the change
+                # and the direction of the slide
+                root.manager.transition.direction = 'left'
+                root.manager.transition.duration = 1
+                root.manager.current = 'config'

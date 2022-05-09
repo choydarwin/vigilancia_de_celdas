@@ -1,14 +1,1 @@
-{
-    "Frecuencia_de_vigilancia": {
-        "score": "Semanal"
-    },
-    "Dia_de_vigilancia": {
-        "score": "Monday"
-    },
-    "Hora_de_vigilancia": {
-        "score": "14"
-    },
-    "Minuto_de_vigilancia": {
-        "score": "2"
-    }
-}
+{"Frecuencia_de_vigilancia": {"score": "Semanal"}, "Dia_de_vigilancia": {"score": "Monday"}, "Hora_de_vigilancia": {"score": "09"}, "Minuto_de_vigilancia": {"score": "28"}}
