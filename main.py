@@ -1,4 +1,3 @@
-from inspect import ArgSpec
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.label import Label
@@ -6,23 +5,148 @@ from kivy.uix.screenmanager import Screen, ScreenManager, RiseInTransition
 from kivy.lang import Builder
 from kivy.uix.spinner import Spinner
 import time
+from kivy.uix.boxlayout import BoxLayout
 from kivy.storage.jsonstore import JsonStore
-from kivy.properties import StringProperty, ListProperty
-from kivy.uix.recycleview import RecycleView
+from kivy.properties import ObjectProperty, NumericProperty, ListProperty
+from kivy.uix.recycleview.views import RecycleDataViewBehavior
 from functools import partial
 from kivy.uix.recycleboxlayout import RecycleBoxLayout
 from kivy.uix.behaviors import FocusBehavior
 from kivy.uix.recycleview.layout import LayoutSelectionBehavior
-from kivy.properties import BooleanProperty
-from kivy.uix.recycleview.views import RecycleDataViewBehavior
-from random import sample
-from string import ascii_lowercase
+from kivy.uix.recycleview import RecycleView
 
-Builder.load_file('main.kv')
+#Builder.load_file('main.kv')
+
+
+Builder.load_string("""  
+
+<Principal>
+    GridLayout:
+        cols:1
+        size: root.width, root.height
+
+        Label:
+            text:"Vigilancia de celdas patron"
+            
+        ClockLabel:
+            id: clock_label
+            size_hint: 0.75,1
+
+        BoxLayout:
+            orientation: 'vertical'
+            Label:
+                text:"Configuracion seleccionada - " 
+
+        Button:
+            text: "Configuracion"
+            background_color : 0, 0, 1, 1
+            on_press:
+                # You can define the duration of the change
+                # and the direction of the slide
+                root.manager.transition.direction = 'left'
+                root.manager.transition.duration = 1
+                root.manager.current = 'config'
+
+
+<Configuracion>
+
+    GridLayout:
+        cols:1
+        size: root.width, root.height
+
+        Label:
+            text:"Settings"
+
+        Spinner: 
+            id: spinner_frecuencia
+            on_text: root.spinner_frecuencia_de_vigilancia(spinner_frecuencia.text)
+            text: "Seleccionar frecuencia de vigilancia"
+            values: ["Diaria", "Semanal", "Mensual"]
+            on_text: spinner_dia.disabled = True if spinner_frecuencia.text == "Diaria" else False
+
+        Spinner: 
+            id: spinner_dia
+            on_text: root.spinner_dia(spinner_dia.text)
+            text: "Seleccionar dia"
+            values: ["Monday", "Tuesday", "Miercoles", "Jueves", "Viernes"]
+            
+        
+        BoxLayout:
+            orientation:'horizontal'
+            Spinner: 
+                id: spinner_hora
+                on_text: root.spinner_hora_de_inicio(spinner_hora.text)
+                text: "Seleccionar hora de inicio"
+                values: root.horas
+
+            Spinner: 
+                id: spinner_minuto
+                on_text: root.spinner_minuto_de_inicio(spinner_minuto.text)
+                text: "Seleccionar minuto de inicio"
+                values: root.minutos
+
+        Button:
+            text: "Regresar"
+            background_color : 0, 0, 1, 1
+            on_press:
+                root.manager.transition.direction = 'left'
+                root.manager.transition.duration = 1
+                root.manager.current = 'main'
+
+<MyBL>:
+    t1: ""
+    t2: ""
+    orientation: "horizontal"
+    Label:
+        text: root.t1
+    Label:
+        text: root.t2
+<RV>:
+    viewclass: 'MyBL'
+    SelectableRecycleBoxLayout:
+        default_size: None, dp(56)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+        multiselect: True
+        touch_multiselect: True
+
+
+<Ventana_proceso>
+    GridLayout:
+        cols:1
+        size: root.width, root.height
+
+        Label:
+            text:"Vigilancia de celdas patron"
+
+        RV:
+
+        ProgressBar:
+            id: proceso
+            min: 0
+            max: 100
+            value:0
+
+        Button:
+            text: "Configuracion"
+            background_color : 0, 0, 1, 0
+            on_press:
+                # You can define the duration of the change
+                # and the direction of the slide
+                root.manager.transition.direction = 'left'
+                root.manager.transition.duration = 1
+                root.manager.current = 'config'
+
+""")
+
 frecuencia_de_inicio=""
 hora_de_inicio=""
 minuto_de_inicio=""
 minuto_de_inicio=""
+
+data_sms=[{"t1":"PREPARANDO"}]
 
 
 class Principal(Screen):
@@ -30,11 +154,11 @@ class Principal(Screen):
     def __init__(self, **kw):
         super(Screen,self).__init__(**kw)
 
-    print_estado=StringProperty()
+        #print_estado=StringProperty()
 
     def actualizar_label(self): 
 
-        self.print_estado = StringProperty()  
+        #self.print_estado = StringProperty()  
         self.store=JsonStore('configuraciones.json')
         self.frecuencia_de_inicio=self.store.get('Frecuencia_de_vigilancia')
         self.dia_de_inicio=self.store.get('Dia_de_vigilancia')
@@ -47,8 +171,7 @@ class Principal(Screen):
 class ClockLabel(Label):
     def __init__(self, **kwargs):
         super(ClockLabel, self).__init__(**kwargs)
-        Clock.schedule_interval(self.update, 1)
-        
+        Clock.schedule_interval(self.update, 1)     
 
     def update(self, *args):
 
@@ -85,7 +208,10 @@ class ClockLabel(Label):
             if frecuencia_de_inicio['score'] == 'Diaria' and hora_de_inicio['score'] == hora and minuto_de_inicio['score'] == minuto and segundo == '00':
                 print('VAMOS A INICIAR DIARIO')
                 screen_manager.current= "proceso"
-                esp_32()
+                Clock.schedule_once(partial(esp_32.activar,"uno"),2)
+                Clock.schedule_once(partial(esp_32.activar,"dos"),4)
+                Clock.schedule_once(partial(esp_32.activar,"tres"),6)
+                Clock.schedule_once(partial(esp_32.activar,"cuatro"),8)
                 
             if frecuencia_de_inicio['score'] == 'Semanal' and dia_de_inicio['score'] == dia and hora_de_inicio['score'] == hora and minuto_de_inicio['score'] == minuto and segundo == '00':
                 print('VAMOS A INICIAR SEMANAL') 
@@ -99,34 +225,11 @@ class ClockLabel(Label):
 
 
 class esp_32():
-    def __init__(self):
-        print("hola soy esp")
-        self.iniciar()
-    
-    def iniciar(self):
-        print("vamos a inicar")
-        add=RV()
-        add.init()
+    def activar(celdas_a_comparar,*args):
+        print("vamos a activar: " + celdas_a_comparar)
+        RV.agregar_en_pantalla(celdas_a_comparar)
         
-            
-
-
-class RV(RecycleView):
-    def __init__(self, **kwargs):
-        super(RV, self).__init__(**kwargs)
-        self.data=[{'text':"Preparando"}]
-        
-
-    def add(self,*args):    
-        print("Estoy en addd")
-        self.data.append = [{'text': "nada"}]
-    
-    def init(self):
-        Clock.schedule_once(self.add,3)
-
-        
-
-
+      
 
 class Configuracion(Screen):
     def __init__(self,**kw):
@@ -160,18 +263,53 @@ class Configuracion(Screen):
         print("El minuto inicio sera: " + value)
         self.store.put('Minuto_de_vigilancia', score= value)
         minuto_de_inicio = value
-        
+
 
 class Ventana_proceso(Screen):
     pass
+        
+
+class SelectableRecycleBoxLayout(FocusBehavior, LayoutSelectionBehavior,RecycleBoxLayout):
+    pass
+
+class MyBL(RecycleDataViewBehavior, BoxLayout):
+    ''' Add selection support to the Label '''
+    index = None
+    #data=data_sms lo mismo que el comnetario de abajo
+
+    def refresh_view_attrs(self, rv, index, data):
+        ''' Catch and handle the view changes '''
+        self.index = index
+        #self.data=data_sms pense que iba a funcionar asi
+        return super(MyBL, self).refresh_view_attrs(
+            rv, index, data)
+
+
+class RV(RecycleView):
+    def __init__(self, **kwargs):
+        super(RV, self).__init__(**kwargs)
+        Clock.schedule_interval(self.monitoriar,2)
+    
+    def monitoriar(self,*kw):
+        self.data = data_sms
+
+
+    @classmethod    
+    def agregar_en_pantalla(self,celdas_a_comparar):
+        data_sms.append({"t1":celdas_a_comparar})
+        #print(data_sms)
+
+
 
 screen_manager = ScreenManager(transition = RiseInTransition())
-screen_manager.add_widget(Principal(name ="main"))
-screen_manager.add_widget(Configuracion(name ="config"))
-screen_manager.add_widget(Ventana_proceso(name="proceso"))
- 
+
+
 class VigilanciaApp(App):
     def build(self):
+        #screen_manager = ScreenManager(transition = RiseInTransition())
+        screen_manager.add_widget(Principal(name ="main"))
+        screen_manager.add_widget(Configuracion(name ="config"))
+        screen_manager.add_widget(Ventana_proceso(name="proceso"))
         return screen_manager
 
 
