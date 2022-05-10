@@ -78,6 +78,9 @@ class ClockLabel(Label):
                 print('VAMOS A INICIAR DIARIO')
                 screen_manager.current= "proceso"
                 Clock.schedule_once(partial(esp_32.activar,"uno"),2)
+                Clock.schedule_once(partial(esp_32.activar,"dos"),4)
+                Clock.schedule_once(partial(esp_32.activar,"tres"),6)
+                Clock.schedule_once(partial(esp_32.activar,"cuatro"),8)
                 
             if frecuencia_de_inicio['score'] == 'Semanal' and dia_de_inicio['score'] == dia and hora_de_inicio['score'] == hora and minuto_de_inicio['score'] == minuto and segundo == '00':
                 print('VAMOS A INICIAR SEMANAL') 
@@ -91,7 +94,6 @@ class ClockLabel(Label):
 
 
 class esp_32():
-
     def activar(uno,*args):
         print("vamos a activar: " + uno)
 
