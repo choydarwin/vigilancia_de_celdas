@@ -1,4 +1,3 @@
-import secrets
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.label import Label
@@ -8,7 +7,8 @@ from kivy.uix.spinner import Spinner
 import time
 from kivy.storage.jsonstore import JsonStore
 from kivy.properties import StringProperty
-
+from kivy.uix.recycleview import RecycleView
+from functools import partial
 
 Builder.load_file('main.kv')
 frecuencia_de_inicio=""
@@ -18,23 +18,22 @@ minuto_de_inicio=""
 
 
 class Principal(Screen):
+    
     def __init__(self, **kw):
         super(Screen,self).__init__(**kw)
 
-    def actualizar_label(self):   
-         
+    print_estado=StringProperty()
+
+    def actualizar_label(self): 
+
+        self.print_estado = StringProperty()  
         self.store=JsonStore('configuraciones.json')
         self.frecuencia_de_inicio=self.store.get('Frecuencia_de_vigilancia')
         self.dia_de_inicio=self.store.get('Dia_de_vigilancia')
         self.hora_de_inicio=self.store.get('Hora_de_vigilancia')
         self.minuto_de_inicio=self.store.get('Minuto_de_vigilancia')
-
-        return frecuencia_de_inicio
-
-    print_estado = StringProperty()
-    print_estado='Modalidad: '  #+ ' - ' + 'Dia: ' + dia_de_inicio['score'] + ' - ' + 'Hora: ' + hora_de_inicio['score']  + ' - ' + 'Minuto: ' + minuto_de_inicio['score']
-
-
+        
+        self.print_estado='Modalidad: '  #+ ' - ' + 'Dia: ' + dia_de_inicio['score'] + ' - ' + 'Hora: ' + hora_de_inicio['score']  + ' - ' + 'Minuto: ' + minuto_de_inicio['score']
 
 
 class ClockLabel(Label):
@@ -72,10 +71,14 @@ class ClockLabel(Label):
             #print(hora_de_inicio['score'])
             #print(minuto_de_inicio['score'])
 
+            #init=iniciar_vigilancia()
+
+
             if frecuencia_de_inicio['score'] == 'Diaria' and hora_de_inicio['score'] == hora and minuto_de_inicio['score'] == minuto and segundo == '00':
                 print('VAMOS A INICIAR DIARIO')
                 screen_manager.current= "proceso"
-
+                Clock.schedule_once(iniciar,2)
+                
             if frecuencia_de_inicio['score'] == 'Semanal' and dia_de_inicio['score'] == dia and hora_de_inicio['score'] == hora and minuto_de_inicio['score'] == minuto and segundo == '00':
                 print('VAMOS A INICIAR SEMANAL') 
                 screen_manager.current= "proceso" 
@@ -85,8 +88,9 @@ class ClockLabel(Label):
                 screen_manager.current= "proceso"
         
         iniciar_secuencia()
-        #act=Principal()
-        #act.actualizar_label()
+
+def iniciar(*kwargs):
+    print("VAMOS A DARLE")
 
 
 class Configuracion(Screen):
@@ -122,6 +126,13 @@ class Configuracion(Screen):
         self.store.put('Minuto_de_vigilancia', score= value)
         minuto_de_inicio = value
         
+
+class update_process(RecycleView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        content = ['hola','mundo']
+        self.data = [{'text':item} for item in content]
+
 
 class Ventana_proceso(Screen):
     pass
