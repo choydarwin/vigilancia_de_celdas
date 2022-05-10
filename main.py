@@ -77,7 +77,7 @@ class ClockLabel(Label):
             if frecuencia_de_inicio['score'] == 'Diaria' and hora_de_inicio['score'] == hora and minuto_de_inicio['score'] == minuto and segundo == '00':
                 print('VAMOS A INICIAR DIARIO')
                 screen_manager.current= "proceso"
-                Clock.schedule_once(iniciar,2)
+                Clock.schedule_once(esp_32.activar,2)
                 
             if frecuencia_de_inicio['score'] == 'Semanal' and dia_de_inicio['score'] == dia and hora_de_inicio['score'] == hora and minuto_de_inicio['score'] == minuto and segundo == '00':
                 print('VAMOS A INICIAR SEMANAL') 
@@ -89,8 +89,13 @@ class ClockLabel(Label):
         
         iniciar_secuencia()
 
-def iniciar(*kwargs):
-    print("VAMOS A DARLE")
+
+class esp_32():
+    def __init__(self):
+        pass#self.celda=celda
+    
+    def activar(self):
+        print("vamos a activar: ")
 
 
 class Configuracion(Screen):
