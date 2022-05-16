@@ -1,3 +1,4 @@
+from inspect import ArgSpec
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.label import Label
@@ -6,9 +7,16 @@ from kivy.lang import Builder
 from kivy.uix.spinner import Spinner
 import time
 from kivy.storage.jsonstore import JsonStore
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, ListProperty
 from kivy.uix.recycleview import RecycleView
 from functools import partial
+from kivy.uix.recycleboxlayout import RecycleBoxLayout
+from kivy.uix.behaviors import FocusBehavior
+from kivy.uix.recycleview.layout import LayoutSelectionBehavior
+from kivy.properties import BooleanProperty
+from kivy.uix.recycleview.views import RecycleDataViewBehavior
+from random import sample
+from string import ascii_lowercase
 
 Builder.load_file('main.kv')
 frecuencia_de_inicio=""
@@ -77,10 +85,7 @@ class ClockLabel(Label):
             if frecuencia_de_inicio['score'] == 'Diaria' and hora_de_inicio['score'] == hora and minuto_de_inicio['score'] == minuto and segundo == '00':
                 print('VAMOS A INICIAR DIARIO')
                 screen_manager.current= "proceso"
-                Clock.schedule_once(partial(esp_32.activar,"uno"),2)
-                Clock.schedule_once(partial(esp_32.activar,"dos"),4)
-                Clock.schedule_once(partial(esp_32.activar,"tres"),6)
-                Clock.schedule_once(partial(esp_32.activar,"cuatro"),8)
+                esp_32()
                 
             if frecuencia_de_inicio['score'] == 'Semanal' and dia_de_inicio['score'] == dia and hora_de_inicio['score'] == hora and minuto_de_inicio['score'] == minuto and segundo == '00':
                 print('VAMOS A INICIAR SEMANAL') 
@@ -94,8 +99,56 @@ class ClockLabel(Label):
 
 
 class esp_32():
-    def activar(uno,*args):
-        print("vamos a activar: " + uno)
+    def __init__(self):
+        print("hola soy esp")
+        self.iniciar()
+    
+    def iniciar(self):
+        print("vamos a inicar")
+        
+        def activar(*args):
+            print("vamos a darle")
+            hola=RequestRecycleView()
+            hola.add()
+            
+            
+        Clock.schedule_once(activar,2)
+
+class SelectableRecycleBoxLayout(FocusBehavior, LayoutSelectionBehavior,
+                                 RecycleBoxLayout):
+    ''' Adds selection and focus behaviour to the view. '''
+
+
+
+class RequestRow(RecycleDataViewBehavior):
+    index = None
+    selected = BooleanProperty(False)
+    selectable = BooleanProperty(True)
+
+    def refresh_view_attrs(self, rv, index, data):
+        ''' Catch and handle the view changes '''
+
+        self.index = index
+        self.row_index = str(index)
+        self.row_content = data['text']
+        return super(RequestRow, self).refresh_view_attrs(
+            rv, index, data)
+
+class RequestRecycleView(RecycleView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.data = []
+        self.add()
+        
+
+    def add(self,*args):
+        print("vamos a iniciar lakjdslfkjasdf")
+        for r in range(3):
+            row = {'text': ''.join(sample(ascii_lowercase, 6))}
+            self.data.append(row)
+
+        Clock.schedule_once(self.add,2)
+
 
 
 class Configuracion(Screen):
@@ -131,13 +184,6 @@ class Configuracion(Screen):
         self.store.put('Minuto_de_vigilancia', score= value)
         minuto_de_inicio = value
         
-
-class update_process(RecycleView):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        content = ['hola','mundo']
-        self.data = [{'text':item} for item in content]
-
 
 class Ventana_proceso(Screen):
     pass

@@ -1,3 +1,5 @@
+
+
 <Principal>
     GridLayout:
         cols:1
@@ -46,7 +48,7 @@
             id: spinner_dia
             on_text: root.spinner_dia(spinner_dia.text)
             text: "Seleccionar dia"
-            values: ["Monday", "Tuesday", "Miercoles", "Jueves", "Viernes"]
+            values: ["Monday", "Tuesday", "Miercoles", "Jueves", "Friday"]
             
         
         BoxLayout:
@@ -63,7 +65,6 @@
                 text: "Seleccionar minuto de inicio"
                 values: root.minutos
 
-        
 
         Button:
             text: "Regresar"
@@ -74,30 +75,39 @@
                 root.manager.current = 'main'
 
 
+<RequestRow@BoxLayout>
+    text: 'abba'
+    size_hint_y: None
+    orientation: 'vertical'
+    row_index: id_row_index.text
+    row_index:''
+    pos: self.pos
+    size: self.size
+    Label:
+        id: id_row_index 
+        text: self.parent.text
+
+
 <Ventana_proceso>
     GridLayout:
         cols:1
         size: root.width, root.height
 
-        Label:
-            text:"Vigilancia de celdas patron"
-        
-        update_process:
-            viewclass:'Label'
-            RecycleBoxLayout:
-                default_size: None, dp(60)
+        RequestRecycleView:
+            viewclass: 'RequestRow'
+            SelectableRecycleBoxLayout:
+                default_size: None, dp(56)
                 default_size_hint: 1, None
                 size_hint_y: None
                 height: self.minimum_height
                 orientation: 'vertical'
+                multiselect: True
+                touch_multiselect: True
 
-
-        ProgressBar:
-            id: proceso
-            min: 0
-            max: 100
-            value:0
-
+        Label:
+            text:"Vigilancia de celdas patron"
+        
+        
         Button:
             text: "Configuracion"
             background_color : 0, 0, 1, 0
