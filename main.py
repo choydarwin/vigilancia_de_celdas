@@ -105,49 +105,26 @@ class esp_32():
     
     def iniciar(self):
         print("vamos a inicar")
+        add=RV()
+        add.init()
         
-        def activar(*args):
-            print("vamos a darle")
-            hola=RequestRecycleView()
-            hola.add()
             
-            
-        Clock.schedule_once(activar,2)
-
-class SelectableRecycleBoxLayout(FocusBehavior, LayoutSelectionBehavior,
-                                 RecycleBoxLayout):
-    ''' Adds selection and focus behaviour to the view. '''
 
 
-
-class RequestRow(RecycleDataViewBehavior):
-    index = None
-    selected = BooleanProperty(False)
-    selectable = BooleanProperty(True)
-
-    def refresh_view_attrs(self, rv, index, data):
-        ''' Catch and handle the view changes '''
-
-        self.index = index
-        self.row_index = str(index)
-        self.row_content = data['text']
-        return super(RequestRow, self).refresh_view_attrs(
-            rv, index, data)
-
-class RequestRecycleView(RecycleView):
+class RV(RecycleView):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.data = []
-        self.add()
+        super(RV, self).__init__(**kwargs)
+        self.data=[{'text':"Preparando"}]
         
 
-    def add(self,*args):
-        print("vamos a iniciar lakjdslfkjasdf")
-        for r in range(3):
-            row = {'text': ''.join(sample(ascii_lowercase, 6))}
-            self.data.append(row)
+    def add(self,*args):    
+        print("Estoy en addd")
+        self.data.append = [{'text': "nada"}]
+    
+    def init(self):
+        Clock.schedule_once(self.add,3)
 
-        Clock.schedule_once(self.add,2)
+        
 
 
 

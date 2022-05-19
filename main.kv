@@ -75,17 +75,7 @@
                 root.manager.current = 'main'
 
 
-<RequestRow@BoxLayout>
-    text: 'abba'
-    size_hint_y: None
-    orientation: 'vertical'
-    row_index: id_row_index.text
-    row_index:''
-    pos: self.pos
-    size: self.size
-    Label:
-        id: id_row_index 
-        text: self.parent.text
+
 
 
 <Ventana_proceso>
@@ -93,16 +83,15 @@
         cols:1
         size: root.width, root.height
 
-        RequestRecycleView:
-            viewclass: 'RequestRow'
-            SelectableRecycleBoxLayout:
+        RV:
+            viewclass: 'Label'
+            RecycleBoxLayout:
                 default_size: None, dp(56)
                 default_size_hint: 1, None
                 size_hint_y: None
                 height: self.minimum_height
                 orientation: 'vertical'
-                multiselect: True
-                touch_multiselect: True
+
 
         Label:
             text:"Vigilancia de celdas patron"
