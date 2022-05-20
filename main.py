@@ -3,19 +3,15 @@ from kivy.clock import Clock
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen, ScreenManager, RiseInTransition
 from kivy.lang import Builder
-from kivy.uix.spinner import Spinner
 import time
 from kivy.uix.boxlayout import BoxLayout
 from kivy.storage.jsonstore import JsonStore
-from kivy.properties import ObjectProperty, NumericProperty, ListProperty
 from kivy.uix.recycleview.views import RecycleDataViewBehavior
 from functools import partial
 from kivy.uix.recycleboxlayout import RecycleBoxLayout
 from kivy.uix.behaviors import FocusBehavior
 from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.uix.recycleview import RecycleView
-
-#Builder.load_file('main.kv')
 
 
 Builder.load_string("""  
@@ -60,7 +56,7 @@ Builder.load_string("""
         Spinner: 
             id: spinner_frecuencia
             on_text: root.spinner_frecuencia_de_vigilancia(spinner_frecuencia.text)
-            text: "Seleccionar frecuencia de vigilancia"
+            text: "Seleccionar modalidad"
             values: ["Diaria", "Semanal", "Mensual"]
             on_text: spinner_dia.disabled = True if spinner_frecuencia.text == "Diaria" else False
 
@@ -208,10 +204,10 @@ class ClockLabel(Label):
             if frecuencia_de_inicio['score'] == 'Diaria' and hora_de_inicio['score'] == hora and minuto_de_inicio['score'] == minuto and segundo == '00':
                 print('VAMOS A INICIAR DIARIO')
                 screen_manager.current= "proceso"
-                Clock.schedule_once(partial(esp_32.activar,"uno"),2)
-                Clock.schedule_once(partial(esp_32.activar,"dos"),4)
-                Clock.schedule_once(partial(esp_32.activar,"tres"),6)
-                Clock.schedule_once(partial(esp_32.activar,"cuatro"),8)
+                Clock.schedule_once(partial(esp_32.activar,"uno_y_cuatro"),2)
+                Clock.schedule_once(partial(esp_32.activar,"dos_y_tres"),4)
+                Clock.schedule_once(partial(esp_32.activar,"tres_y_uno"),6)
+                Clock.schedule_once(partial(esp_32.activar,"cuatro_y_dos"),8)
                 
             if frecuencia_de_inicio['score'] == 'Semanal' and dia_de_inicio['score'] == dia and hora_de_inicio['score'] == hora and minuto_de_inicio['score'] == minuto and segundo == '00':
                 print('VAMOS A INICIAR SEMANAL') 
@@ -223,12 +219,10 @@ class ClockLabel(Label):
         
         iniciar_secuencia()
 
-
 class esp_32():
     def activar(celdas_a_comparar,*args):
         print("vamos a activar: " + celdas_a_comparar)
-        RV.agregar_en_pantalla(celdas_a_comparar)
-        
+        RV.agregar_en_pantalla(celdas_a_comparar)   
       
 
 class Configuracion(Screen):
@@ -242,7 +236,7 @@ class Configuracion(Screen):
     
     def spinner_frecuencia_de_vigilancia(self, value):
         global frecuencia_de_inicio
-        print("Se selecciono hacer la vigilancia: " + value)
+        print("Modalidad: " + value)
         self.store.put('Frecuencia_de_vigilancia', score= value)
         frecuencia_de_inicio = value
                 
@@ -264,11 +258,9 @@ class Configuracion(Screen):
         self.store.put('Minuto_de_vigilancia', score= value)
         minuto_de_inicio = value
 
-
 class Ventana_proceso(Screen):
     pass
         
-
 class SelectableRecycleBoxLayout(FocusBehavior, LayoutSelectionBehavior,RecycleBoxLayout):
     pass
 
@@ -284,7 +276,6 @@ class MyBL(RecycleDataViewBehavior, BoxLayout):
         return super(MyBL, self).refresh_view_attrs(
             rv, index, data)
 
-
 class RV(RecycleView):
     def __init__(self, **kwargs):
         super(RV, self).__init__(**kwargs)
@@ -296,13 +287,10 @@ class RV(RecycleView):
 
     @classmethod    
     def agregar_en_pantalla(self,celdas_a_comparar):
-        data_sms.append({"t1":celdas_a_comparar})
+        data_sms.append({"t1":"comparando celdas: "+ celdas_a_comparar})
         #print(data_sms)
 
-
-
 screen_manager = ScreenManager(transition = RiseInTransition())
-
 
 class VigilanciaApp(App):
     def build(self):
@@ -311,7 +299,6 @@ class VigilanciaApp(App):
         screen_manager.add_widget(Configuracion(name ="config"))
         screen_manager.add_widget(Ventana_proceso(name="proceso"))
         return screen_manager
-
 
 if __name__ == '__main__':
     clock = VigilanciaApp()
